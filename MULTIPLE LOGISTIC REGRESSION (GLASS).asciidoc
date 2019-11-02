@@ -1,0 +1,305 @@
++*In[20]:*+
+[source, ipython3]
+----
+'''
+Import all required libaries
+numpy
+pandas
+sklearn:- This is my favourite library
+matplotlib
+'''
+import numpy as np
+import pandas as pd
+from sklearn import linear_model
+from sklearn import metrics
+from sklearn.model_selection import train_test_split
+import matplotlib.pyplot as plt
+from sklearn.preprocessing import StandardScaler
+from sklearn import metrics
+from sklearn.model_selection import train_test_split
+from sklearn.linear_model import LogisticRegression
+----
+
+
++*In[10]:*+
+[source, ipython3]
+----
+Glass=pd.read_csv('/home/ssc/Desktop/glass.csv')   # Read csv file from local directory
+----
+
+
++*In[21]:*+
+[source, ipython3]
+----
+Glass # see what we imported
+----
+
+
++*Out[21]:*+
+----
+[cols=",,,,,,,,,,",options="header",]
+|================================================================
+| |RI |Na |Mg |Al |Si |K |Ca |Ba |Fe |Type
+|0 |1.52101 |13.64 |4.49 |1.10 |71.78 |0.06 |8.75 |0.00 |0.0 |1
+|1 |1.51761 |13.89 |3.60 |1.36 |72.73 |0.48 |7.83 |0.00 |0.0 |1
+|2 |1.51618 |13.53 |3.55 |1.54 |72.99 |0.39 |7.78 |0.00 |0.0 |1
+|3 |1.51766 |13.21 |3.69 |1.29 |72.61 |0.57 |8.22 |0.00 |0.0 |1
+|4 |1.51742 |13.27 |3.62 |1.24 |73.08 |0.55 |8.07 |0.00 |0.0 |1
+|... |... |... |... |... |... |... |... |... |... |...
+|209 |1.51623 |14.14 |0.00 |2.88 |72.61 |0.08 |9.18 |1.06 |0.0 |7
+|210 |1.51685 |14.92 |0.00 |1.99 |73.06 |0.00 |8.40 |1.59 |0.0 |7
+|211 |1.52065 |14.36 |0.00 |2.02 |73.42 |0.00 |8.44 |1.64 |0.0 |7
+|212 |1.51651 |14.38 |0.00 |1.94 |73.61 |0.00 |8.48 |1.57 |0.0 |7
+|213 |1.51711 |14.23 |0.00 |2.08 |73.36 |0.00 |8.62 |1.67 |0.0 |7
+|================================================================
+
+214 rows × 10 columns
+----
+
+
++*In[25]:*+
+[source, ipython3]
+----
+# see shape size behaviour of data data is clean thats why no need to do missing value and outliers treatments
+
+Glass.shape
+Glass.index
+Glass.columns
+Glass.info()
+Glass.count()
+----
+
+
++*Out[25]:*+
+----
+<class 'pandas.core.frame.DataFrame'>
+RangeIndex: 214 entries, 0 to 213
+Data columns (total 10 columns):
+RI      214 non-null float64
+Na      214 non-null float64
+Mg      214 non-null float64
+Al      214 non-null float64
+Si      214 non-null float64
+K       214 non-null float64
+Ca      214 non-null float64
+Ba      214 non-null float64
+Fe      214 non-null float64
+Type    214 non-null int64
+dtypes: float64(9), int64(1)
+memory usage: 16.8 KB
+RI      214
+Na      214
+Mg      214
+Al      214
+Si      214
+K       214
+Ca      214
+Ba      214
+Fe      214
+Type    214
+dtype: int64----
+
+
++*In[24]:*+
+[source, ipython3]
+----
+Glass.describe()# Measure of central tendancy and see type and behaviour of data
+----
+
+
++*Out[24]:*+
+----
+[cols=",,,,,,,,,,",options="header",]
+|=======================================================================
+| |RI |Na |Mg |Al |Si |K |Ca |Ba |Fe |Type
+|count |214.000000 |214.000000 |214.000000 |214.000000 |214.000000
+|214.000000 |214.000000 |214.000000 |214.000000 |214.000000
+
+|mean |1.518365 |13.407850 |2.684533 |1.444907 |72.650935 |0.497056
+|8.956963 |0.175047 |0.057009 |2.780374
+
+|std |0.003037 |0.816604 |1.442408 |0.499270 |0.774546 |0.652192
+|1.423153 |0.497219 |0.097439 |2.103739
+
+|min |1.511150 |10.730000 |0.000000 |0.290000 |69.810000 |0.000000
+|5.430000 |0.000000 |0.000000 |1.000000
+
+|25% |1.516523 |12.907500 |2.115000 |1.190000 |72.280000 |0.122500
+|8.240000 |0.000000 |0.000000 |1.000000
+
+|50% |1.517680 |13.300000 |3.480000 |1.360000 |72.790000 |0.555000
+|8.600000 |0.000000 |0.000000 |2.000000
+
+|75% |1.519157 |13.825000 |3.600000 |1.630000 |73.087500 |0.610000
+|9.172500 |0.000000 |0.100000 |3.000000
+
+|max |1.533930 |17.380000 |4.490000 |3.500000 |75.410000 |6.210000
+|16.190000 |3.150000 |0.510000 |7.000000
+|=======================================================================
+----
+
+
++*In[32]:*+
+[source, ipython3]
+----
+# assign X and Y values to form spliiting modelling and testing
+x = Glass.iloc[:,0:10]
+y = Glass.iloc[:,-1]
+----
+
+
++*In[33]:*+
+[source, ipython3]
+----
+# Split the data for 
+# training and testing
+# 20% size for test and remaining size for training purpose
+
+x_train,x_test,y_train,y_test = train_test_split(x,y,test_size = 0.2,random_state = 0) 
+----
+
+
++*In[34]:*+
+[source, ipython3]
+----
+# Do regression model to find out the constants
+# Then try to fit the model
+# Find out predicted value using predict
+# Class is multinomial because we have many variables value range
+
+clf = LogisticRegression(random_state=0,multi_class='multinomial',solver='newton-cg')
+model = clf.fit(x_train,y_train)
+y_pred = clf.predict(x_test)
+----
+
+
++*In[35]:*+
+[source, ipython3]
+----
+# Get the confusion matrix to find out the accuracy, precision, sensitivity of data
+
+cnf_matrix = metrics.confusion_matrix(y_test, y_pred)
+print(cnf_matrix) #.... are incorrect predictions
+----
+
+
++*Out[35]:*+
+----
+[[ 9  0  0  0  0  0]
+ [ 0 18  0  1  0  0]
+ [ 0  3  2  0  0  0]
+ [ 0  0  0  2  0  0]
+ [ 0  0  0  0  1  1]
+ [ 0  0  0  0  0  6]]
+----
+
+1.building_windows_float_processed
+2.building_windows_non_float_processed 3.vehicle_windows_float_processed
+4.vehicle_windows_non_float_processed (none in this database)
+5.containers 6.tableware 7.headlamps
+
+
++*In[37]:*+
+[source, ipython3]
+----
+# create new observations
+new_observation = [1.5159,13.02,3.58,1.51,73.12,0.69,7.96,0,0,0]
+
+# predict class
+y_pred = model.predict([new_observation])
+
+# view predicted probabilities
+probability = model.predict_proba([new_observation])
+----
+
+
++*In[38]:*+
+[source, ipython3]
+----
+# Write the python program to get the output systematic give lables to the output according to requirement
+
+if y_pred == 1:
+    lbl1 = 'building windows'
+else:
+    if y_pred == 2:
+        lbl1 = 'building_windows_non_float_processed'
+    else:
+        if y_pred == 3:
+            lbl1 = 'vehicle_windows_float_processed'
+        else:
+            if y_pred ==4:
+                lbl1 = 'vehicle_windows_non_float_processed'
+            else:
+                if y_pred == 5:
+                    lbl1 = 'containers'
+                else:
+                    if y_pred == 6:
+                        lbl1 = 'tableware'
+                    else:
+                        if y_pred == 7:
+                            lbl1 = 'headlamps'
+                
+----
+
+
++*In[39]:*+
+[source, ipython3]
+----
+# Print predicted class and Probability of predicted values
+
+print('Predict the glass type :',lbl1)
+print('Predicted probability of the glass type is :', probability)
+----
+
+
++*Out[39]:*+
+----
+Predict the glass type : building windows
+Predicted probability of the glass type is : [[9.97545397e-01 2.45025481e-03 4.06086858e-06 2.56453064e-07
+  3.07395137e-08 7.60790859e-11]]
+----
+
+
++*In[40]:*+
+[source, ipython3]
+----
+# Import seaborn to find out the correlation between the things which is nothing but the performance of 
+# each and every variable
+# plot heatmap for better understanding
+
+import seaborn as sns
+corr = Glass.corr()
+print('Glass values correlation')
+sns.heatmap(corr, annot = True)
+----
+
+
++*Out[40]:*+
+----
+Glass values correlation
+<matplotlib.axes._subplots.AxesSubplot at 0x7fdfb3dda210>
+![png](output_13_2.png)
+----
+
+
++*In[34]:*+
+[source, ipython3]
+----
+# Plot histogram seperately to see the behavious of each and every element in the matrix
+
+Glass.hist(bins=50, figsize=(15,10))
+plt.show()
+----
+
+
++*Out[34]:*+
+----
+![png](output_14_0.png)
+----
+
+
++*In[ ]:*+
+[source, ipython3]
+----
+
+----
